@@ -13,7 +13,7 @@
 
             <button type="submit" class="btn btn-danger">
                 <i class="fas fa-check-square"></i>
-                    Si
+                    Sí
              </button>
 
 
