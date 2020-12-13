@@ -19,14 +19,10 @@ class CategoriaController extends Controller
 
     public function index(Request $Request)
     {
-
-
         $buscarpor = $Request->buscarpor;
         $categoria = Categoria::where('estado', '=','1')
             ->where('descripcion','like','%'.$buscarpor.'%')
             ->paginate($this::PAGINATION);
-
-
 
         //cuando vaya al index me retorne a la vista
         return view    ('tablas.categorias.index',compact('categoria','buscarpor')); //el compact es para pasar los datos , para meter mas variables meterle mas comas dentro del compact

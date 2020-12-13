@@ -16,6 +16,11 @@ Route::get('/bienvenido', function () {
 // usar dd("aaaaaaaaaa"); para debugear
 
 Route::resource('categoria', 'CategoriaController');  // es resource pq trabajamos con varias rutas 
+Route::get ('categoria/{id}/confirmar','CategoriaController@confirmar')->name('categoria.confirmar');
+Route::get('cancelar', function () {
+    return redirect()->route('categoria.index')->with('datos','Accion cancelada');
+})->name('cancelar');
+
 
 
 Route::post('/', 'UserController@login')->name('user.login');

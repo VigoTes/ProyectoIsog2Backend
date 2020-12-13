@@ -18,56 +18,57 @@
 
 
 {{-- AQUI FALTA EL CODIGO SESSION DATOS ENDIF xdd --}}
-@if (session('datos'))
-  <div class ="alert alert-warning alert-dismissible fade show mt-3" role ="alert">
-      {{session('datos')}}
-    <button type = "button" class ="close" data-dismiss="alert" aria-label="close">
-        <span aria-hidden="true"> &times;</span>
-    </button>
-    
-  </div>
-@ENDIF
+      @if (session('datos'))
+        <div class ="alert alert-warning alert-dismissible fade show mt-3" role ="alert">
+            {{session('datos')}}
+          <button type = "button" class ="close" data-dismiss="alert" aria-label="close">
+              <span aria-hidden="true"> &times;</span>
+          </button>
+          
+        </div>
+      @ENDIF
 
-<table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Codigo</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Opciones</th>
-            
-          </tr>
-        </thead>
-  <tbody>
+    <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Codigo</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Opciones</th>
+                
+              </tr>
+            </thead>
+      <tbody>
 
 
 
-    {{--     varQuePasamos  nuevoNombre                        --}}
-    @foreach($categoria as $itemCategoria)
+        {{--     varQuePasamos  nuevoNombre                        --}}
+        @foreach($categoria as $itemCategoria)
 
-   
-        <tr>
-            <td>{{$itemCategoria->codcategoria  }}</td>
-            <td>{{$itemCategoria->descripcion  }}</td>
-            <td>
+      
+            <tr>
+                <td>{{$itemCategoria->codcategoria  }}</td>
+                <td>{{$itemCategoria->descripcion  }}</td>
+                <td>
 
-                     {{-- MODIFICAR RUTAS DE Delete y Edit --}}
-                <a href="{{route('categoria.edit',$itemCategoria->codcategoria)}}" class = "btn btn-warning">  
-                    <i class="fas fa-edit"> </i> 
-                      Editar
-                </a>
 
-                <a href="{{route('categoria.confirmar',$itemCategoria->codcategoria)}}" class = "btn btn-danger"> 
-                    <i class="fas fa-trash-alt"> </i> 
-                      Eliminar
-                </a>
-            </td>
+                        {{-- MODIFICAR RUTAS DE Delete y Edit --}}
+                    <a href="{{route('categoria.edit',$itemCategoria->codcategoria)}}" class = "btn btn-warning">  
+                        <i class="fas fa-edit"> </i> 
+                          Editar
+                    </a>
 
-        </tr>
-    @endforeach
-  </tbody>
-</table>
+                    <a href="{{route('categoria.confirmar',$itemCategoria->codcategoria)}}" class = "btn btn-danger"> 
+                        <i class="fas fa-trash-alt"> </i> 
+                          Eliminar
+                    </a>
+                </td>
 
-{{$categoria->links()}}
+            </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+{{-- {{$categoria->links()}} --}}
 
 
 @endsection
