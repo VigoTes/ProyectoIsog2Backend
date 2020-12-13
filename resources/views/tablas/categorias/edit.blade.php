@@ -21,7 +21,7 @@
             </div>
             
             <button type="submit" class="btn btn-primary">Grabar</button>
-            <a href="" class="btn btn-danger"><i class="fas fa-ban"></i>Cancelar</a>
+            <a href="{{route('categoria.index')}}" class="btn btn-danger"><i class="fas fa-ban"></i>Cancelar</a>
           </form>
 
 
