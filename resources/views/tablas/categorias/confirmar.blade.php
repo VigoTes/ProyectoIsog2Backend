@@ -2,7 +2,7 @@
 @section('contenido')
 
     <div class="container">
-        <h1>¿Desea eliminar el registro? Codigo : {{ $categoria->codcategoria }} - Descripcion:  {{ $categoria->descripcion }}  </h1>
+        <h1>¿Desea eliminar el registro? Código : {{ $categoria->codcategoria }} - Descripción:  {{ $categoria->descripcion }}  </h1>
 
 
                                     {{-- nombre de la ruta,         atributo --}}
