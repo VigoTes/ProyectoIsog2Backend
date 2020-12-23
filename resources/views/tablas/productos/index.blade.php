@@ -55,12 +55,12 @@
 
 
                         {{-- MODIFICAR RUTAS DE Delete y Edit --}}
-                    <a href="" class = "btn btn-warning">  
+                    <a href="{{route('producto.edit',$itemProducto->codproducto)}}" class = "btn btn-warning">  
                         <i class="fas fa-edit"> </i> 
                           Editar
                     </a>
 
-                    <a href="" class = "btn btn-danger"> 
+                    <a href="{{route('producto.confirmar',$itemProducto->codproducto)}}" class = "btn btn-danger"> 
                         <i class="fas fa-trash-alt"> </i> 
                           Eliminar
                     </a>

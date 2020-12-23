@@ -18,6 +18,7 @@ Route::get('/bienvenido', function () {
 Route::resource('categoria', 'CategoriaController');  // es resource pq trabajamos con varias rutas 
 Route::get ('categoria/{id}/confirmar','CategoriaController@confirmar')->name('categoria.confirmar');
 
+Route::get ('producto/{codproducto}/confirmar','ProductoController@confirmar')->name('producto.confirmar');
 
 
 Route::resource('producto', 'ProductoController');  // es resource pq trabajamos con varias rutas 

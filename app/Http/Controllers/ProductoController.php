@@ -95,9 +95,13 @@ class ProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($codproducto)
     {
-        //
+          $producto=Producto::findOrFail($codproducto);                                  
+          $categoria = Categoria::where('estado','=','1')->get();                          
+          $unidad = Unidad::where('estado','=','1')->get();                          
+          return view('tablas.productos.edit',compact('producto','categoria','unidad'));
+
     }
 
     /**
@@ -107,19 +111,41 @@ class ProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $codproducto)
     {
-        //
+            $data=request()->validate([ 
+                    'descripcion'=>'required|max:30'                   
+            ],
+            [ 
+            'descripcion.required'=>'Ingrese descripción de producto',
+            'descripcion.max'=>'Maximo 30 de caracteres para la descripcion'                          
+            ]);       
+               $producto=Producto::findOrFail($codproducto);
+               $producto->descripcion=$request->descripcion;
+               $producto->codcategoria=$request->codcategoria;
+               $producto->codunidad=$request->codunidad;
+               $producto->precio=$request->precio;
+               $producto->stock=$request->stock;
+               $producto->save();
+               return redirect()->route('producto.index')->with('datos','Registro Actualizado!');
+     
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function confirmar($codproducto)
+      {
+          //        
+          $producto=Producto::findOrFail($codproducto);
+          return view('tablas.productos.confirmar',compact('producto'));
+      }
+
+
+
+    public function destroy($codproducto)
     {
-        //
+        $producto=Producto::findOrFail($codproducto);
+          $producto->estado='0';
+          $producto->save();
+          return redirect()->route('producto.index')->with('datos','Registro Eliminado!');
+
     }
 }
