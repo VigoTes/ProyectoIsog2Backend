@@ -7,6 +7,7 @@
   <div class="form-group">
     <label for="descripcion">Descripcion</label>
     <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeHolder="Ingrese descripcion">
+    
     @error('descripcion')
         <span class = "invalid-feedback" role ="alert">
             <strong>{{ $message }} </strong>
