@@ -14,7 +14,7 @@ class Producto extends Model
 
     public $timestamps = false;  //para que no trabaje con los campos fecha 
 
-
+        
     // le indicamos los campos de la tabla 
     protected $fillable = ['descripcion','codcategoria','codunidad','stock','precio','estado'];
 
