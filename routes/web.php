@@ -27,6 +27,10 @@ Route::resource('Escuela', 'EscuelaController');  // es resource pq trabajamos c
 Route::resource('Factultad', 'FacultadController');  // es resource pq trabajamos con varias rutas 
 Route::resource('Estudiante', 'EstudianteController');  // es resource pq trabajamos con varias rutas 
 Route::resource('cliente', 'ClienteController');  // es resource pq trabajamos con varias rutas 
+Route::resource('unidad', 'UnidadController');  // es resource pq trabajamos con varias rutas 
+
+Route::get ('unidad/{id}/confirmar','UnidadController@confirmar')->name('unidad.confirmar');
+
 
 Route::get ('cliente/{id}/confirmar','ClienteController@confirmar')->name('cliente.confirmar');
 

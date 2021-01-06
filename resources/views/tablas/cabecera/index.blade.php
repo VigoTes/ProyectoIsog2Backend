@@ -1,7 +1,7 @@
 @extends ('layout.plantilla')
 
 @section('contenido')
-<h3> LISTADO DE CLIENTES </h3>
+<h3> LISTADO DE FACTURAS BOLETAS </h3>
 
 
     <a href="{{route('cliente.create')}}" class = "btn btn-primary"> 
