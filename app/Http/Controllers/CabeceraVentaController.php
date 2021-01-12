@@ -3,7 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\CabeceraVenta;
+use App\Cliente;
+use App\DetalleVenta;
+use App\Producto;
+use App\Tipo;
+use App\Parametro;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Exception;
+
 
 class CabeceraVentaController extends Controller
 {
@@ -12,14 +21,14 @@ class CabeceraVentaController extends Controller
     public function index(Request $Request)
     {
         $buscarpor = $Request->buscarpor;
-        $cliente = CabeceraVenta::where('estado', '=','1')
-            ->where('nombres','like','%'.$buscarpor.'%')
+        $ventas = CabeceraVenta::where('estado', '=','1')
+            //->where('nombres','like','%'.$buscarpor.'%')
             ->paginate($this::PAGINATION);
 
         //cuando vaya al index me retorne a la vista
 
 
-        return view('tablas.clientes.index',compact('cliente','buscarpor')); 
+        return view('tablas.cabeceraventas.index',compact('ventas','buscarpor')); 
 
 
     }
@@ -31,7 +40,16 @@ class CabeceraVentaController extends Controller
      */
     public function create()
     {
-        //
+        $cabecera=CabeceraVenta::where('estado', '=','1');
+        $producto= Producto::all();
+        $tipo=Tipo::all();
+        $cliente=Cliente::all();
+        $tipou=Tipo::select('tipo_id','descripcion')->orderBy('tipo_id','DESC')->get();                         
+        $parametros=Parametro::findOrFail($tipou[0]->tipo_id);           
+        return view('tablas.cabeceraventas.create',compact('tipo','parametros','cliente','producto'));
+
+     
+
     }
 
     /**
@@ -42,7 +60,71 @@ class CabeceraVentaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();        
+            /* Grabar Cabecera */
+            /* Obtiene codigo cliente a partir del dni */
+            $cliente=Cliente::where('ruc_dni','=',$request->ruc)->get();
+            $cliente_id=$cliente[0]->cliente_id;            
+            $venta=new CabeceraVenta();
+            $venta->cliente_id=$cliente_id;
+            $venta->nrodoc=$request->get('nrodoc');        
+            $venta->tipo_id=$request->seltipo;           
+            $arr = explode('/', $request->fecha);
+            $nFecha = $arr[2].'-'.$arr[1].'-'.$arr[0];     
+            $venta->fecha_venta=$nFecha;    
+            
+            if ($request->seltipo='2')
+                {                        
+                    $venta->total=$request->total;           
+                    $venta->subtotal='0';
+                    $venta->igv='0';
+                }
+            else
+                {
+                    $venta->total='100';
+                    
+                    $venta->subtotal='0';
+                    $venta->igv='0';
+                }
+                    
+            $venta->estado='1';
+            $venta->save();
+            /* Grabar Detalle */
+            //$detalleventa=$request->get('detalles');         
+
+            $producto_id = $request->get('cod_producto');
+            $cantidad = $request->get('cantidad');
+            $pventa = $request->get('pventa');            
+
+            $cont = 0;
+
+            while ($cont<count($producto_id)) {
+                $detalle=new DetalleVenta();
+                $detalle->venta_id=$venta->venta_id;
+                $detalle->producto_id=$producto_id[$cont];
+                $detalle->cantidad=$cantidad[$cont];
+                $detalle->precio=$pventa[$cont];                
+                $detalle->save();
+                  /* Actualizar stock */
+                Producto::ActualizarStock($detalle->producto_id,$detalle->cantidad);                         
+                $cont=$cont+1;
+            }        
+            /* Actualizar el numero de documento en la tabla parametro */
+          /* if ($venta->tipo_id=="2")
+                $nroNuevo="002-".str_pad((substr($request->get('nrodoc'),5,11)+1),6,"0", STR_PAD_LEFT);   
+            elseif ($venta->tipo_id=="1")
+                 $nroNuevo="001-".str_pad((substr($request->get('nrodoc'),5,11)+1),6,"0", STR_PAD_LEFT);   
+
+            parametros::ActualizarNumero($venta->tipo_id, $nroNuevo);*/
+
+            DB::commit();                
+            return redirect()->route('venta.index');
+        } 
+        catch (Exception $e) {
+         DB::rollback();
+        }
+
     }
 
     /**
@@ -89,4 +171,19 @@ class CabeceraVentaController extends Controller
     {
         //
     }
+
+    public function ProductoCodigo($producto_id){
+        return DB::table('productos as p')->join('unidades as u','p.unidad_id','=','u.unidad_id')                 
+         ->where('p.estado','=','1')->where('p.producto_id','=',$producto_id)
+        ->select('p.producto_id','p.descripcion','u.descripcion as unidad','p.precio','p.stock')->get();    
+    }
+    public function PorTipo($descripcion)
+    {        
+        //return Tipo::where('descripcion','=',$descripcion)->get();
+        return DB::table('tipo as t')->join('parametros as p','p.tipo_id','=','t.tipo_id')                 
+         ->where('t.tipo_id','=',$descripcion)->select('t.tipo_id','t.descripcion','p.serie','p.numeracion')->get(); 
+    }
+
+
+    
 }

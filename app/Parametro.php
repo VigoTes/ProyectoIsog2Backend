@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 
 class Parametro extends Model
@@ -14,5 +15,17 @@ class Parametro extends Model
 
     // le indicamos los campos de la tabla 
     protected $fillable = ['numeracion','serie'];
+
+    /* public static function ActualizarNumero($tipo_id, $numeracion){
+        try{
+            DB::table('parametros')
+                ->where('tipo_id', '=', $tipo_id)                
+                ->update([
+                    'numeracion' => $numeracion]);
+            return true;
+        }catch(Exception $ex){
+            return false;
+        }
+    } */ 
 
 }

@@ -13,16 +13,24 @@ class CabeceraVenta extends Model
 
 
     // le indicamos los campos de la tabla 
-    protected $fillable = ['cliente_id','tipo_id','fecha_venta',
-                            'nrodoc','subtotal','igv','total','estado'];
+    protected $fillable = ['codcliente','tipo_id','fecha_venta',
+                            'nrodocumento','subtotal','igv','total','estado'];
 
 
     public function cliente(){
-        return $this->hasOne('App\Cliente','cliente_id','cliente_id');
+        return $this->hasOne('App\Cliente','codcliente','codcliente');
 
     }
+    
+    public function detalleventas(){
+        return $this->hasMany('App\DetalleVenta','venta_id','venta_id');
+
+    }
+    
     public function tipo(){
         return $this->hasOne('App\Tipo','tipo_id','tipo_id');
 
     }
+
+
 }

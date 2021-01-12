@@ -15,4 +15,9 @@ class Cliente extends Model
     // le indicamos los campos de la tabla 
     protected $fillable = ['nombres','direccion','ruc_dni','email','estado'];
 
+    public function ventas(){
+
+        return $this->hasMany('App\CabeceraVenta','codcliente','codcliente');
+    }
+
 }

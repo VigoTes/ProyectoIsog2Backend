@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DetalleVentas extends Model
+class DetalleVenta extends Model
 {
     protected $table = "detalleventas";
     public $timestamps = false;  //para que no trabaje con los campos fecha 
@@ -13,7 +13,11 @@ class DetalleVentas extends Model
     // le indicamos los campos de la tabla 
     protected $fillable = ['precio','cantidad'];
 
+    public function venta(){
+        return $this->hasOne(CabeceraVenta::class,'venta_id','venta_id');
+        
 
+    }
 
 
 

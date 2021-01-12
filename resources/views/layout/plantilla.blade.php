@@ -8,18 +8,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Font Awesome -->
-  {{-- <link rel="stylesheet" href="/adminlte/plugins/fontawesome-free/css/all.min.css">
-   --}}
+ <link rel="stylesheet" href="/adminlte/plugins/fontawesome-free/css/all.min.css">
+
   
   <!-- Ionicons -->
-  {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
- --}}
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+ 
 
 
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="/adminlte/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  @yield('estilos')
+
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -42,7 +45,7 @@
       </li>
 
     </ul>
-
+    
     <!-- SEARCH FORM -->
     <form class="form-inline ml-3">
       <div class="input-group input-group-sm">
@@ -54,7 +57,7 @@
         </div>
       </div>
     </form>
-
+    
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu -->
@@ -216,7 +219,13 @@
                   <p>Unidades</p>
                 </a>
               </li>
-    
+              <li class="nav-item">
+                <a href="{{route('cabeceraventa.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ventas</p>
+                </a>
+              </li>
+              
 
 
             </ul>
@@ -283,6 +292,7 @@
 <script src="/adminlte/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+ @yield('script')
 <!-- AdminLTE App -->
 <script src="/adminlte/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
