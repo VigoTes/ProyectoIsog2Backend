@@ -65,7 +65,7 @@ class CabeceraVentaController extends Controller
             /* Grabar Cabecera */
             /* Obtiene codigo cliente a partir del dni */
             $cliente=Cliente::where('ruc_dni','=',$request->ruc)->get();
-            $cliente_id=$cliente[0]->cliente_id;            
+            $cliente_id=$cliente[0]->codcliente;            
             $venta=new CabeceraVenta();
             $venta->cliente_id=$cliente_id;
             $venta->nrodoc=$request->get('nrodoc');        
@@ -173,9 +173,9 @@ class CabeceraVentaController extends Controller
     }
 
     public function ProductoCodigo($producto_id){
-        return DB::table('productos as p')->join('unidades as u','p.unidad_id','=','u.unidad_id')                 
-         ->where('p.estado','=','1')->where('p.producto_id','=',$producto_id)
-        ->select('p.producto_id','p.descripcion','u.descripcion as unidad','p.precio','p.stock')->get();    
+        return DB::table('productos as p')->join('unidades as u','p.codunidad','=','u.codunidad')                 
+         ->where('p.estado','=','1')->where('p.codproducto','=',$producto_id)
+        ->select('p.codproducto','p.descripcion','u.descripcion as unidad','p.precio','p.stock')->get();    
     }
     public function PorTipo($descripcion)
     {        

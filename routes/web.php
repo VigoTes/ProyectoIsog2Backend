@@ -39,7 +39,7 @@ Route::get ('Estudiante/{id}/confirmar','EstudianteController@confirmar')->name(
 /* datos productos */
 Route::get('EncontrarProducto/{producto_id}', 'CabeceraVentaController@ProductoCodigo');
 /* datos tipos */
-Route::get('EncontrarTipo/{descripcion}', 'CabeceraVentaController@PorTipo');
+Route::get('EncontrarTipo/{codigo}', 'CabeceraVentaController@PorTipo');
 
 
 

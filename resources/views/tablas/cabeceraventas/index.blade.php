@@ -16,6 +16,7 @@
         </form>
     </nav>
 
+    
 
 {{-- AQUI FALTA EL CODIGO SESSION DATOS ENDIF xdd --}}
       @if (session('datos'))

@@ -51,7 +51,7 @@ function mostrarMensajeError(mensaje){
 
 function agregarDetalle()
 {
-    ruc=$("#ruc").val();    
+    ruc=$("#ruc").val();   
     if (ruc=='')
     {
         mostrarMensajeError("Por favor seleccione el Cliente");    
