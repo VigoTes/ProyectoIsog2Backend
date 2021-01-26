@@ -19,5 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('productos','ProductoController');
+Route::post('/loginAPI', 'UserController@loginAPI')->name('user.loginAPI');
+
 Route::get('categorias','CategoriaController@ListarCategoria');
 Route::get('unidades','UnidadController@ListarUnidad');
