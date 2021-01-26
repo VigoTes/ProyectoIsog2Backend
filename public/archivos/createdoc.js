@@ -3,6 +3,7 @@ var total=0;
 var detalleventa=[];
 var subtotal=[];
 var controlproducto=[];              
+
 $(document).ready(function(){    
     
     $('#cliente_id').change(function(){
@@ -14,9 +15,14 @@ $(document).ready(function(){
     $('#btnadddet').click(function(){
         agregarDetalle();
     });
+
+
+
     $('#seltipo').change(function(){
             mostrarTipo();
     });
+
+
 });  
     function mostrarCliente(){                            
         datosCliente=document.getElementById('cliente_id').value.split('_');        $('#ruc').val(datosCliente[1]);  
@@ -149,7 +155,7 @@ function eliminardetalle(codigo,index){
     $('#fila'+index).remove();
     controlproducto[index]="";
     $('#total').val(number_format(total,2));
-   }
+}
 
 function number_format(amount, decimals) {
     amount += ''; // por si pasan un numero en vez de un string

@@ -4,7 +4,8 @@ namespace App;
 
 
 use Illuminate\Database\Eloquent\Model;
-
+use Exception;
+use Illuminate\Support\Facades\DB;
 class Parametro extends Model
 {
     protected $table = "parametros";
@@ -16,7 +17,7 @@ class Parametro extends Model
     // le indicamos los campos de la tabla 
     protected $fillable = ['numeracion','serie'];
 
-    /* public static function ActualizarNumero($tipo_id, $numeracion){
+    public static function ActualizarNumero($tipo_id, $numeracion){
         try{
             DB::table('parametros')
                 ->where('tipo_id', '=', $tipo_id)                
@@ -24,8 +25,9 @@ class Parametro extends Model
                     'numeracion' => $numeracion]);
             return true;
         }catch(Exception $ex){
+            error_log('HA OCURRIDO UN ERROR EN Parametro::ActualizarNumero. Msj error:'.$ex);
             return false;
         }
-    } */ 
+    } 
 
 }

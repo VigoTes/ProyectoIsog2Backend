@@ -16,7 +16,7 @@ use Exception;
 
 class CabeceraVentaController extends Controller
 {
-    const PAGINATION = 10; // PARA QUE PAGINEE DE 10 EN 10
+    const PAGINATION = 50; // PARA QUE PAGINEE DE 10 EN 10
 
     public function index(Request $Request)
     {
@@ -60,32 +60,35 @@ class CabeceraVentaController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         try {
             DB::beginTransaction();        
             /* Grabar Cabecera */
             /* Obtiene codigo cliente a partir del dni */
             $cliente=Cliente::where('ruc_dni','=',$request->ruc)->get();
-            $cliente_id=$cliente[0]->codcliente;            
+            $codcliente=$cliente[0]->codcliente;           
             $venta=new CabeceraVenta();
-            $venta->cliente_id=$cliente_id;
-            $venta->nrodoc=$request->get('nrodoc');        
+            $venta->codcliente=$codcliente;
+            $venta->nrodocumento=$request->get('nrodoc');        
             $venta->tipo_id=$request->seltipo;           
             $arr = explode('/', $request->fecha);
             $nFecha = $arr[2].'-'.$arr[1].'-'.$arr[0];     
             $venta->fecha_venta=$nFecha;    
             
-            if ($request->seltipo='2')
+            if ($request->seltipo=='2') // boleta
                 {                        
+                    error_log('SALIO BOLETA');
                     $venta->total=$request->total;           
-                    $venta->subtotal='0';
+                    $venta->subtotal=$request->total;
                     $venta->igv='0';
                 }
             else
-                {
-                    $venta->total='100';
-                    
-                    $venta->subtotal='0';
-                    $venta->igv='0';
+                {   //FACTURA
+                    error_log('SALIO FACTURA');
+                    $venta->total=$request->total;
+                    $venta->subtotal=$request->totalSinIGV;
+                    $venta->igv=$request->IGV;
                 }
                     
             $venta->estado='1';
@@ -98,30 +101,39 @@ class CabeceraVentaController extends Controller
             $pventa = $request->get('pventa');            
 
             $cont = 0;
-
+                
             while ($cont<count($producto_id)) {
                 $detalle=new DetalleVenta();
                 $detalle->venta_id=$venta->venta_id;
-                $detalle->producto_id=$producto_id[$cont];
+                $detalle->productoid=$producto_id[$cont];
                 $detalle->cantidad=$cantidad[$cont];
                 $detalle->precio=$pventa[$cont];                
                 $detalle->save();
                   /* Actualizar stock */
-                Producto::ActualizarStock($detalle->producto_id,$detalle->cantidad);                         
+                Producto::ActualizarStock($detalle->productoid,$detalle->cantidad);                         
                 $cont=$cont+1;
             }        
             /* Actualizar el numero de documento en la tabla parametro */
-          /* if ($venta->tipo_id=="2")
-                $nroNuevo="002-".str_pad((substr($request->get('nrodoc'),5,11)+1),6,"0", STR_PAD_LEFT);   
+           if ($venta->tipo_id=="2")
+                $nroNuevo=str_pad((substr($request->get('nrodoc'),5,11)+1),6,"0", STR_PAD_LEFT);   
             elseif ($venta->tipo_id=="1")
-                 $nroNuevo="001-".str_pad((substr($request->get('nrodoc'),5,11)+1),6,"0", STR_PAD_LEFT);   
-
-            parametros::ActualizarNumero($venta->tipo_id, $nroNuevo);*/
-
+                 $nroNuevo=str_pad((substr($request->get('nrodoc'),5,11)+1),6,"0", STR_PAD_LEFT);   
+            
+            Parametro::ActualizarNumero($venta->tipo_id, $nroNuevo);
+            error_log( 'NUEVO NUMERO:::::::::::::::::::::::::::'.$nroNuevo);
             DB::commit();                
-            return redirect()->route('venta.index');
+            return redirect()->route('cabeceraventa.index');
         } 
         catch (Exception $e) {
+            error_log('HA OCURRIDO UN ERROR EN LA TRANSACCIÓN, SE HARÁ ROLLBACK POR EL SIGUIENTE ERROR 
+            
+            
+
+            '.$e.'
+            
+            
+            ');
+
          DB::rollback();
         }
 

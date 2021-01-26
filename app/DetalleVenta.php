@@ -11,7 +11,7 @@ class DetalleVenta extends Model
 // la clave es doble  entons no le ponemos
 
     // le indicamos los campos de la tabla 
-    protected $fillable = ['precio','cantidad'];
+    protected $fillable = ['venta_id','productoid','precio','cantidad',];
 
     public function venta(){
         return $this->hasOne(CabeceraVenta::class,'venta_id','venta_id');
