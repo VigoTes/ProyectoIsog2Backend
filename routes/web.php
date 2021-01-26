@@ -13,6 +13,7 @@ Route::get('/bienvenido', function () {
 });
 
 
+
 // usar dd("aaaaaaaaaa"); para debugear GA
 
 Route::resource('categoria', 'CategoriaController');  // es resource pq trabajamos con varias rutas 
