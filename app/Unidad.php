@@ -15,6 +15,6 @@ class Unidad extends Model
     // le indicamos los campos de la tabla 
     protected $fillable = ['descripcion','estado'];
 
-    
+      
 
 }

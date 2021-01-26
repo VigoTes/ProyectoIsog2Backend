@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Producto;
 use App\Categoria;
 use App\Unidad;
-
-
+use Illuminate\Support\Facades\DB;
+use Psy\Command\WhereamiCommand;
+use Exception;
 class ProductoController extends Controller
 {
      const PAGINATION = '4';
@@ -15,11 +16,15 @@ class ProductoController extends Controller
     
     public function index(Request $request )
     {
-        $buscarpor = $request->buscarpor;
-        $producto = Producto::where('estado','=','1')
-            ->where('descripcion','like','%'.$buscarpor.'%')->paginate($this::PAGINATION);
+        error_log('Se accedió al metodo INDEX');
+        $producto = DB::table('productos as p')->join('categorias as c','c.codcategoria','p.codcategoria')
+        ->join('unidades as u','u.codunidad','=','p.codunidad')->where('p.estado','=','1')
+        ->select('p.codproducto','p.descripcion','p.codcategoria','c.descripcion as categoria',
+            'p.codunidad','u.descripcion as unidad','p.precio','p.stock')->get();
+        ;
 
-        return view('tablas.productos.index',compact('producto','buscarpor'));
+        return response()->json($producto);
+
     }
 
     /**
@@ -27,13 +32,8 @@ class ProductoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $categoria = Categoria::where('estado','=','1')->get(); //enviamos las cat activas
-
-        $unidad = Unidad::where('estado','=','1')->get(); //enviamos las cat activas
-        return view ('tablas.productos.create',compact('categoria','unidad'));
-    }
+  
+     
 
     /**
      * Store a newly created resource in storage.
@@ -43,37 +43,27 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $data = request()->validate(
-            [
-                'descripcion'=>'required|max:30',
-                'codcategoria'=>'required',
-                'codunidad'=>'required',
-                'precio'=>'required',
-                'stock'=>'required'
-            ],[
-                'descripcion.required'=>'Ingrese descripcion de categoria',
-                'descripcion.max' => 'Maximo 30 caracteres la descripcion',
-                'codcategoria.required'=>'Debe seleccionar una categoria ',
-                'codunidad.required'=>'Debe seleccionar un tipo de unidad ',
-                'descripcion.required'=>'Debe ingresar descripcion ',
-                'precio.required'=>'Debe ingresar precio',
-                'stock.required'=>'Debe Ingresar stock'
-            ]
-
-            );
-
+        error_log('Se accedió al metodo STORE');
+       try {
             $producto = new Producto();
-            
-            $producto->descripcion=$request->descripcion;
-            $producto->codcategoria=$request->codcategoria;
-            $producto->codunidad=$request->codunidad;
-            $producto->stock=$request->stock;
-            $producto->precio=$request->precio;
-            $producto->estado='1';              
-
+            $producto->descripcion = $request->descripcion;
+            $producto->codcategoria = $request->codcategoria;
+            $producto->codunidad = $request->codunidad;
+            $producto->precio = $request->precio;
+            $producto->stock = $request->stock;
+            $producto->estado='1';
             $producto->save();
-                return redirect()->route('producto.index')->with('datos','Registro nuevo guardado');
+            
+            $result = ['descripcion'=>$producto->descripcion,'created'=>true];
+            return $result;
 
+       } catch (Exception $e) {
+           return "ERROR en store : ".$e->getMessage();
+        
+        
+        //throw $th;
+       }
+        
 
 
     }
@@ -86,7 +76,8 @@ class ProductoController extends Controller
      */
     public function show($id)
     {
-        //
+        error_log('Se accedió al metodo SHOW');
+        return Producto::findOrFail($id);
     }
 
     /**
@@ -95,14 +86,7 @@ class ProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($codproducto)
-    {
-          $producto=Producto::findOrFail($codproducto);                                  
-          $categoria = Categoria::where('estado','=','1')->get();                          
-          $unidad = Unidad::where('estado','=','1')->get();                          
-          return view('tablas.productos.edit',compact('producto','categoria','unidad'));
 
-    }
 
     /**
      * Update the specified resource in storage.
@@ -113,39 +97,22 @@ class ProductoController extends Controller
      */
     public function update(Request $request, $codproducto)
     {
-            $data=request()->validate([ 
-                    'descripcion'=>'required|max:30'                   
-            ],
-            [ 
-            'descripcion.required'=>'Ingrese descripción de producto',
-            'descripcion.max'=>'Maximo 30 de caracteres para la descripcion'                          
-            ]);       
-               $producto=Producto::findOrFail($codproducto);
-               $producto->descripcion=$request->descripcion;
-               $producto->codcategoria=$request->codcategoria;
-               $producto->codunidad=$request->codunidad;
-               $producto->precio=$request->precio;
-               $producto->stock=$request->stock;
-               $producto->save();
-               return redirect()->route('producto.index')->with('datos','Registro Actualizado!');
-     
+
+        error_log('Se accedió al metodo UPDATE');
+            $producto = Producto::findOrFail($codproducto);
+           $producto->Update($request->all());
+            return $producto;
     }
 
-    public function confirmar($codproducto)
-      {
-          //        
-          $producto=Producto::findOrFail($codproducto);
-          return view('tablas.productos.confirmar',compact('producto'));
-      }
+
 
 
 
     public function destroy($codproducto)
     {
+        error_log('Se accedió al metodo DESTROY');
         $producto=Producto::findOrFail($codproducto);
-          $producto->estado='0';
-          $producto->save();
-          return redirect()->route('producto.index')->with('datos','Registro Eliminado!');
-
+        $producto->delete();
+        return 204;
     }
 }

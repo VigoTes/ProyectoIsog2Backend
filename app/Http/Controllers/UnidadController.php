@@ -11,6 +11,31 @@ class UnidadController extends Controller
 
     const PAGINATION = '4';
 
+
+
+
+
+
+
+
+
+
+    public function ListarUnidad(){
+        $unidad = Unidad::where('estado','=','1')->get();
+        return response()->json($unidad);
+    } 
+
+
+
+
+/*  ------------------------------------------------------------------------------------- */
+
+
+
+
+
+
+
     public function index(Request $request)
     {
         $buscarpor = $request->buscarpor;

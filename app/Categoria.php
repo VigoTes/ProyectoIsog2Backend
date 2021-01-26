@@ -16,7 +16,7 @@ class Categoria extends Model
     // le indicamos los campos de la tabla 
     protected $fillable = ['descripcion','estado'];
 
-    
+      
 
 
 }

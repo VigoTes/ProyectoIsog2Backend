@@ -17,6 +17,26 @@ class CategoriaController extends Controller
 
     const PAGINATION = 10; // PARA QUE PAGINEE DE 10 EN 10
 
+
+    public function ListarCategoria(){
+        $categoria = Categoria::where('estado','=','1')->get();
+        return response()->json($categoria);
+    } 
+
+
+
+
+
+
+
+
+
+
+
+
+/*  ------------------------------------------------------------------------------------- */
+
+
     public function index(Request $Request)
     {
         $buscarpor = $Request->buscarpor;
